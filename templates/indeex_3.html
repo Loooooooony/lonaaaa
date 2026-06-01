@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth" style="color-scheme:dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050505">
+    <meta name="description" content="لونا بوت — أفضل بوت ديسكورد عربي. حماية متقدمة، موسيقى، نظام لفلات، اقتصاد، تذاكر، وأكثر من 50 ميزة. أضفه مجاناً الآن.">
+    <meta name="keywords" content="بوت ديسكورد عربي، لونا بوت، Lona Bot، Discord bot Arabic، بوت حماية ديسكورد">
+    <meta name="author" content="Lona System">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lonabot.space">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lonabot.space">
+    <meta property="og:title" content="لونا بوت — أفضل بوت ديسكورد عربي">
+    <meta property="og:description" content="حماية متقدمة، موسيقى، لفلات، اقتصاد، وأكثر من 50 ميزة. أضفه مجاناً الآن.">
+    <meta property="og:image" content="https://lonabot.space/static/lona.png">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="Lona System">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="لونا بوت — أفضل بوت ديسكورد عربي">
+    <meta name="twitter:description" content="حماية متقدمة، موسيقى، لفلات، اقتصاد، وأكثر من 50 ميزة.">
+    <meta name="twitter:image" content="https://lonabot.space/static/lona.png">
+    <meta name="google-site-verification" content="Mvk2GXjALSwG0ezjHZ1UsuU-eIZU9hv_KZChbW3ZeB8">
+    <title data-i18n="indeex.Lona_System_أدر_مجتمعك">Lona System — أدر مجتمعك بذكاء مطلق</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='lonaa.png') }}?v=99">
+
+    <!-- Fonts: Playfair Display (editorial display) + Cairo (Arabic body) + JetBrains Mono (labels) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cairo:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
+    <style>
+/* ━━━ TOKENS ━━━ */
+:root {
+    --pink:       #ffb7c5;
+    --pink-dim:   rgba(255,183,197,0.12);
+    --pink-glow:  rgba(255,183,197,0.25);
+    --pink-deep:  #e8839a;
+    --bg:         #050505;
+    --s1:         #0a080d;
+    --s2:         #0f0c12;
+    --border:     rgba(255,255,255,0.06);
+    --border-pink: rgba(255,183,197,0.15);
+    --text:       #f0eaf0;
+    --muted:      rgba(240,234,240,0.4);
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Cairo', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --ease:       cubic-bezier(0.16,1,0.3,1);
+    --ease-out:   cubic-bezier(0.22,1,0.36,1);
+}
+
+/* ━━━ RESET ━━━ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    cursor: none;
+}
+::selection { background: var(--pink); color: #000; }
+
+/* ━━━ CUSTOM CURSOR ━━━ */
+#cur {
+    position: fixed; z-index: 99999; pointer-events: none;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--pink);
+    transform: translate(-50%,-50%);
+    transition: width 0.2s var(--ease), height 0.2s var(--ease), opacity 0.2s;
+}
+#cur-ring {
+    position: fixed; z-index: 99998; pointer-events: none;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1.5px solid rgba(255,183,197,0.5);
+    transform: translate(-50%,-50%);
+    transition: transform 0.12s linear, width 0.25s var(--ease), height 0.25s var(--ease), opacity 0.2s;
+}
+body:has(a:hover) #cur, body:has(button:hover) #cur { width: 10px; height: 10px; }
+
+/* ━━━ SCROLLBAR ━━━ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--pink); }
+
+/* ━━━ SCROLL PROGRESS ━━━ */
+#scroll-progress {
+    position: fixed; top: 0; left: 0; height: 2px; z-index: 9999;
+    background: linear-gradient(90deg, var(--pink), #c084fc);
+    width: 0%;
+    box-shadow: 0 0 8px var(--pink-glow);
+}
+
+/* ━━━ SCROLL TO TOP ━━━ */
+#scroll-top-btn {
+    position: fixed; bottom: 28px; left: 28px; z-index: 999;
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(255,183,197,0.08); border: 1px solid var(--border-pink);
+    color: var(--pink); cursor: pointer; display: flex; align-items: center; justify-content: center;
+    opacity: 0; transform: translateY(12px);
+    transition: opacity 0.3s, transform 0.3s, background 0.2s;
+    backdrop-filter: blur(12px);
+}
+#scroll-top-btn.visible { opacity: 1; transform: translateY(0); }
+#scroll-top-btn:hover { background: var(--pink-dim); }
+
+/* ━━━ NAV ━━━ */
+.nav-pill {
+    background: rgba(5,5,7,0.75);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+#main-nav.scrolled .nav-pill {
+    background: rgba(5,5,7,0.96);
+    border-color: var(--border-pink);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+}
+.nav-link { transition: color 0.2s; }
+.nav-link:focus-visible { outline: 2px solid var(--pink); outline-offset: 4px; border-radius: 4px; }
+.nav-link.active { color: #fff !important; }
+.nav-link.active::after {
+    content: ''; display: block; height: 1.5px;
+    background: var(--pink); border-radius: 2px; margin-top: 3px;
+}
+
+/* ━━━ GRAIN CANVAS ━━━ */
+#grain-canvas {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    opacity: 0.035; mix-blend-mode: screen;
+}
+
+/* ━━━ PARTICLES ━━━ */
+#particles-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* ━━━ ANNOUNCEMENT BAR ━━━ */
+#announcement-bar {
+    background: rgba(255,183,197,0.04);
+    border-bottom: 1px solid rgba(255,183,197,0.08);
+    position: relative; z-index: 60;
+}
+
+/* ━━━ SECTION LABEL (editorial [ STYLE ]) ━━━ */
+.sec-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(255,183,197,0.6);
+}
+.sec-label::before { content: '['; }
+.sec-label::after  { content: ']'; }
+
+/* ━━━ HERO BADGE ━━━ */
+.hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px; border-radius: 999px;
+    background: rgba(255,183,197,0.06);
+    border: 1px solid rgba(255,183,197,0.18);
+    color: var(--pink);
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em;
+}
+
+/* ━━━ BUTTONS ━━━ */
+.btn-primary {
+    background: #fff; color: #000; font-weight: 900;
+    font-family: var(--font-body);
+    position: relative; overflow: hidden;
+    transition: box-shadow 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+.btn-primary::after {
+    content: ''; position: absolute; inset: 0;
+    background: var(--pink); transform: translateY(102%);
+    transition: transform 0.35s var(--ease); z-index: 0;
+}
+.btn-primary:hover::after { transform: translateY(0); }
+.btn-primary span, .btn-primary i { position: relative; z-index: 1; }
+.btn-primary:hover { box-shadow: 0 0 40px var(--pink-glow); }
+.btn-primary:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+
+.btn-ghost {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text); transition: background 0.3s, border-color 0.3s;
+    cursor: pointer;
+}
+.btn-ghost:hover { background: var(--pink-dim); border-color: var(--pink); }
+.btn-ghost:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+
+/* ━━━ GLASS ━━━ */
+.glass {
+    background: rgba(10,8,13,0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+}
+.glass-pink {
+    background: rgba(255,183,197,0.03);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border-pink);
+}
+
+/* ━━━ FEATURE CARDS ━━━ */
+.feat-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.feat-card::before {
+    content: ''; position: absolute; inset: 0; opacity: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(255,183,197,0.07) 0%, transparent 65%);
+    transition: opacity 0.4s;
+    pointer-events: none;
+}
+.feat-card:hover { border-color: var(--border-pink); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.feat-card:hover::before { opacity: 1; }
+/* editorial corner squares on hover (from Magic MCP Dark Grid pattern) */
+.feat-card .corners { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.25s; }
+.feat-card:hover .corners { opacity: 1; }
+.feat-card .corners span {
+    position: absolute; width: 7px; height: 7px;
+    background: var(--pink);
+}
+.feat-card .corners span:nth-child(1) { top: -1px; right: -1px; }
+.feat-card .corners span:nth-child(2) { top: -1px; left: -1px; }
+.feat-card .corners span:nth-child(3) { bottom: -1px; right: -1px; }
+.feat-card .corners span:nth-child(4) { bottom: -1px; left: -1px; }
+
+/* ━━━ STAT NUMBERS (Playfair Display) ━━━ */
+.stat-num {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.4s;
+}
+.stat-num:hover { color: var(--pink); }
+
+/* ━━━ TYPING CURSOR ━━━ */
+.typing-cursor::after { content: '|'; color: var(--pink); animation: blink 0.8s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ━━━ MOCK DASHBOARD ━━━ */
+.mock-tab {
+    display:flex; align-items:center; gap:6px; padding:6px 10px;
+    border-radius:8px; cursor:pointer; transition:0.2s; font-size:11px;
+    color:rgba(255,255,255,0.3); font-weight:700; white-space:nowrap;
+    font-family: var(--font-body);
+}
+.mock-tab:hover { background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.6); }
+.mock-tab.active { background:rgba(255,183,197,0.1); color:var(--pink); border:1px solid rgba(255,183,197,0.2); }
+.mock-tab .dot { width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
+.mock-pane { display:none; animation: fadeUp 0.3s ease; }
+.mock-pane.active { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* ━━━ TERMINAL ━━━ */
+.terminal-card {
+    background:#040407; border:1px solid rgba(255,183,197,0.12);
+    border-radius:14px; overflow:hidden; font-family:var(--font-mono);
+}
+.terminal-header {
+    background:rgba(255,183,197,0.05); padding:8px 14px;
+    display:flex; align-items:center; gap:8px;
+    border-bottom:1px solid rgba(255,183,197,0.08);
+}
+.terminal-body { padding:14px; min-height:160px; font-size:12px; }
+.log-line { margin-bottom:6px; display:flex; gap:8px; align-items:flex-start; }
+.log-line .ts { color:rgba(255,255,255,0.18); flex-shrink:0; }
+.log-ban  { color:#ef4444; }
+.log-block{ color:#f97316; }
+.log-warn { color:#eab308; }
+.log-ok   { color:#22c55e; }
+
+/* ━━━ SOUND WAVE ━━━ */
+.sound-wave { display:flex; align-items:center; gap:3px; height:32px; }
+.sound-wave span {
+    display:inline-block; width:3px; border-radius:3px;
+    background:var(--pink); animation:wave 1.2s ease-in-out infinite;
+}
+@keyframes wave { 0%,100%{height:6px;opacity:0.4} 50%{height:28px;opacity:1} }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+
+/* ━━━ REVIEW CARDS ━━━ */
+.review-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 28px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s;
+}
+.review-card:hover { border-color: var(--border-pink); }
+.review-card .corners { position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity 0.25s; }
+.review-card:hover .corners { opacity:1; }
+.review-card .corners span { position:absolute; width:7px; height:7px; background:var(--pink); }
+.review-card .corners span:nth-child(1) { top:-1px; right:-1px; }
+.review-card .corners span:nth-child(2) { top:-1px; left:-1px; }
+.review-card .corners span:nth-child(3) { bottom:-1px; right:-1px; }
+.review-card .corners span:nth-child(4) { bottom:-1px; left:-1px; }
+.review-card blockquote {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(240,234,240,0.75);
+    text-wrap: balance;
+}
+
+/* ━━━ STEP NUMBERS ━━━ */
+.step-num {
+    font-family: var(--font-display);
+    font-size: 5rem; font-weight: 900;
+    line-height: 1;
+    color: rgba(255,183,197,0.08);
+    position: absolute;
+    top: -8px; right: 20px;
+    user-select: none; pointer-events: none;
+}
+
+/* ━━━ REVEAL ━━━ */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ━━━ ANIMATIONS ━━━ */
+@keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+}
+@keyframes scan { 0%{top:0%} 100%{top:100%} }
+.text-shimmer {
+    background: linear-gradient(120deg, #ffb7c5 0%, #fff 40%, #ffb7c5 60%, #ffcce0 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 4s linear infinite;
+}
+
+/* ━━━ RESPONSIVE ━━━ */
+@media (max-width: 768px) {
+    #cur, #cur-ring { display: none; }
+    body { cursor: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+    </style>
+</head>
+<body>
+
+<!-- Grain Canvas -->
+<canvas id="grain-canvas" aria-hidden="true"></canvas>
+<!-- Particles Canvas -->
+<canvas id="particles-canvas" aria-hidden="true"></canvas>
+<!-- Scroll Progress -->
+<div id="scroll-progress" role="progressbar" aria-hidden="true"></div>
+<!-- Custom Cursor -->
+<div id="cur" aria-hidden="true"></div>
+<div id="cur-ring" aria-hidden="true"></div>
+<!-- Scroll To Top -->
+<button id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="للأعلى" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up text-sm" aria-hidden="true"></i>
+</button>
+
+<!-- ━━━ ANNOUNCEMENT BAR ━━━ -->
+<div id="announcement-bar" class="py-2.5 text-center">
+    <div class="flex items-center justify-center gap-3">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" aria-hidden="true"></span>
+        <p class="text-[11px] font-bold text-white/50 tracking-[0.2em]" data-i18n="indeex.الإصدار_V3_0_متاح_الآن"
+           style="font-family:var(--font-mono)">
+            V3.0 — نظام حماية سيبراني جديد كلياً
+        </p>
+        <a href="/updates" class="text-[11px] font-black text-pink-300 hover:text-white transition" data-i18n="indeex.اكتشفه" style="text-underline-offset:3px">اكتشفه</a>
+    </div>
+</div>
+
+<!-- ━━━ NAVBAR ━━━ -->
+<nav class="fixed left-0 right-0 z-50 px-4 pt-4" id="main-nav" style="top:34px">
+    <div class="container mx-auto max-w-6xl">
+        <div class="nav-pill rounded-2xl px-6 py-3 flex justify-between items-center">
+            <a href="/" class="flex items-center gap-3 group" style="cursor:none">
+                <div class="relative">
+                    <img src="/static/lona.png" class="w-9 h-9 rounded-xl border border-white/10 transition duration-300 object-cover"
+                         style="border-color:var(--border)" alt="Lona">
+                    <div class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-1 transition"
+                         style="background:var(--pink);filter:blur(12px);opacity:0;transition:opacity 0.3s"></div>
+                </div>
+                <span class="text-lg font-black tracking-tight" style="font-family:var(--font-body)">
+                    LONA <span style="color:var(--pink)">SYSTEM</span>
+                </span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 text-sm font-bold text-gray-400">
+                <a href="#features" class="nav-link hover:text-white transition" data-section="features" data-i18n="indeex.المميزات">المميزات</a>
+                <a href="#stats" class="nav-link hover:text-white transition" data-section="stats" data-i18n="guide.الإحصائيات">الإحصائيات</a>
+                <a href="#reviews" class="nav-link hover:text-white transition" data-section="reviews" data-i18n="feedback.التقييمات">التقييمات</a>
+                <a href="/updates" class="hover:text-white transition" data-i18n="indeex.التحديثات">التحديثات</a>
+                <a href="/pricing" class="transition font-black" style="color:var(--pink)">الأسعار ✨</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div style="position:relative;">
+                    <button onclick="toggleIndexLang(event)"
+                        style="display:flex;align-items:center;gap:7px;padding:9px 18px;border-radius:14px;
+                               background:rgba(255,183,197,0.06);border:1px solid rgba(255,183,197,0.18);
+                               color:var(--pink);font-family:var(--font-body);font-size:.85rem;
+                               font-weight:700;cursor:none;transition:.2s;backdrop-filter:blur(10px);"
+                        onmouseover="this.style.background='rgba(255,183,197,0.12)';this.style.borderColor='var(--pink)'"
+                        onmouseout="this.style.background='rgba(255,183,197,0.06)';this.style.borderColor='rgba(255,183,197,0.18)'">
+                        <i class="fas fa-globe" style="font-size:.9rem;" aria-hidden="true"></i>
+                        <span id="index-lang-label">🇬🇧 EN</span>
+                        <i class="fas fa-chevron-down" style="font-size:.6rem;opacity:.6;" aria-hidden="true"></i>
+                    </button>
+                    <div id="index-lang-picker"
+                         style="display:none;position:absolute;top:calc(100% + 10px);left:0;
+                                background:rgba(6,4,9,0.97);border:1px solid rgba(255,183,197,0.18);
+                                border-radius:16px;padding:8px;min-width:170px;z-index:9999;
+                                box-shadow:0 16px 48px rgba(0,0,0,0.8);backdrop-filter:blur(24px);">
+                        <div onclick="setIndexLang('en','🇬🇧 EN')"
+                             style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:none;font-size:.84rem;font-weight:700;color:#fff;transition:.15s;"
+                             onmouseover="this.style.background='rgba(255,183,197,0.08)'" onmouseout="this.style.background='none'">
+                            <span style="font-size:1.1rem;">🇬🇧</span> English
+                        </div>
+                        <div onclick="setIndexLang('ar','AR')"
+                             style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:none;font-size:.84rem;font-weight:700;color:#fff;transition:.15s;"
+                             onmouseover="this.style.background='rgba(255,183,197,0.08)'" onmouseout="this.style.background='none'">
+                            <svg width="34" height="22" viewBox="0 0 34 22" aria-hidden="true" style="flex-shrink:0;"><rect width="34" height="22" rx="6" fill="#1a6b3a"/><text x="17" y="15" text-anchor="middle" font-family="Cairo, Arial" font-weight="900" font-size="14" fill="white" dy="-1">ع</text></svg> العربية
+                        </div>
+                        <div style="height:1px;background:rgba(255,255,255,0.05);margin:4px 8px;"></div>
+                        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:.84rem;font-weight:700;color:#3a3a3a;cursor:not-allowed;">
+                            <span style="font-size:1.1rem;">🇫🇷</span> Français <span style="font-size:.65rem;margin-right:auto;" data-i18n="general_settings.قريباً">قريباً</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:.84rem;font-weight:700;color:#3a3a3a;cursor:not-allowed;">
+                            <span style="font-size:1.1rem;">🇹🇷</span> Türkçe <span style="font-size:.65rem;margin-right:auto;" data-i18n="general_settings.قريباً">قريباً</span>
+                        </div>
+                    </div>
+                </div>
+                {% if user %}
+                <a href="/dashboard" class="flex items-center gap-2 px-5 py-2 rounded-xl font-bold text-sm transition hover:scale-105 shadow-lg"
+                   style="background:var(--pink);color:#000;box-shadow:0 8px 24px rgba(255,183,197,0.2);cursor:none">
+                    <i class="fa-solid fa-gauge-high text-xs" aria-hidden="true"></i> لوحة التحكم
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ━━━ HERO ━━━ -->
+<header class="relative min-h-screen flex items-center justify-center pt-36 pb-20 overflow-hidden" style="z-index:10">
+    <div class="container mx-auto px-4 text-center relative" style="z-index:10">
+
+        <div class="hero-badge mb-8 reveal visible">
+            <span class="relative flex h-2 w-2" aria-hidden="true">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background:var(--pink)"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2" style="background:var(--pink)"></span>
+            </span>
+            الجيل الجديد من إدارة المجتمعات العربية
+        </div>
+
+        <h1 class="font-black mb-6 leading-tight reveal visible"
+            style="font-family:var(--font-display);font-size:clamp(3rem,8vw,7rem);text-wrap:balance;transition-delay:0.1s;letter-spacing:-0.02em">
+            أدر مجتمعك
+            <br>
+            <span class="text-shimmer typing-cursor" id="typing-text">بذكاء مطلق.</span>
+        </h1>
+
+        <p class="text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed reveal visible"
+           style="color:var(--muted);transition-delay:0.2s;text-wrap:pretty" data-i18n="indeex.نظام_لونا_يقدم_لك_لوحة_تح">
+            نظام لونا يقدم لك لوحة تحكم متكاملة، حماية سيبرانية فورية، صوتيات عالية الدقة، وأدوات ترفيه تجعل سيرفرك ينبض بالحياة — بواجهة عربية 100٪.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 reveal visible" style="transition-delay:0.3s">
+            <a href="{{ login_url }}" class="btn-primary flex items-center gap-3 px-8 py-4 rounded-2xl text-lg overflow-hidden">
+                <span data-i18n="indeex.ابدأ_مجاناً_الآن">ابدأ مجاناً الآن</span>
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            </a>
+            <a href="https://discord.gg/BSxCa548Gu" target="_blank" rel="noopener"
+               class="btn-ghost flex items-center gap-2 px-8 py-4 rounded-2xl text-base">
+                <i class="fa-brands fa-discord" style="color:#5865F2" aria-hidden="true"></i> سيرفر الدعم
+            </a>
+        </div>
+
+        <!-- Mock Dashboard -->
+        <div class="relative max-w-5xl mx-auto reveal visible" style="transition-delay:0.4s"
+             data-tilt data-tilt-max="3" data-tilt-speed="1000">
+            <div class="absolute -inset-px rounded-3xl blur-sm"
+                 style="background:linear-gradient(135deg,rgba(255,183,197,0.25) 0%,rgba(255,183,197,0.05) 50%,rgba(255,183,197,0.15) 100%)"></div>
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl"
+                 style="background:#06040a;border:1px solid rgba(255,255,255,0.06)">
+                <!-- Browser bar -->
+                <div class="h-9 flex items-center px-4 gap-2"
+                     style="background:rgba(0,0,0,0.6);border-bottom:1px solid rgba(255,255,255,0.04)">
+                    <div class="w-2.5 h-2.5 rounded-full" style="background:rgba(239,68,68,0.6)" aria-hidden="true"></div>
+                    <div class="w-2.5 h-2.5 rounded-full" style="background:rgba(234,179,8,0.6)" aria-hidden="true"></div>
+                    <div class="w-2.5 h-2.5 rounded-full" style="background:rgba(34,197,94,0.6)" aria-hidden="true"></div>
+                    <div class="mx-auto flex items-center gap-2 px-3 py-1 rounded-md text-[10px] text-gray-500"
+                         style="background:rgba(255,255,255,0.04);font-family:var(--font-mono)">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden="true"></span>
+                        lonabot.space/dashboard
+                    </div>
+                </div>
+                <div class="flex" style="min-height:380px">
+                    <!-- Sidebar -->
+                    <div class="w-48 p-3 hidden md:flex flex-col gap-1.5"
+                         style="border-left:1px solid rgba(255,255,255,0.04);background:rgba(0,0,0,0.25)">
+                        <div class="flex items-center gap-2 mb-3 px-2">
+                            <div class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:rgba(255,183,197,0.15)">
+                                <div class="w-3 h-3 rounded-full" style="background:var(--pink)"></div>
+                            </div>
+                            <div class="h-2 w-20 rounded-full" style="background:rgba(255,255,255,0.12)"></div>
+                        </div>
+                        <div class="mock-tab active" onclick="switchMockTab('overview',this)"><span class="dot"></span> نظرة عامة</div>
+                        <div class="mock-tab" onclick="switchMockTab('protection',this)"><span class="dot"></span> الحماية</div>
+                        <div class="mock-tab" onclick="switchMockTab('music',this)"><span class="dot"></span> الموسيقى</div>
+                        <div class="mock-tab" onclick="switchMockTab('levels',this)"><span class="dot"></span> اللفلات</div>
+                        <div class="mock-tab" onclick="switchMockTab('logs',this)"><span class="dot"></span> السجلات</div>
+                        <div style="height:1px;background:rgba(255,255,255,0.04);margin:6px 0;"></div>
+                        <div class="mock-tab" style="color:rgba(255,255,255,0.18);font-size:10px;"><span class="dot"></span> الإعدادات</div>
+                        <div class="mock-tab" style="color:rgba(255,255,255,0.18);font-size:10px;"><span class="dot"></span> المودريشن</div>
+                        <div class="mock-tab mt-auto" style="color:rgba(239,68,68,0.45)"><span class="dot"></span> تسجيل الخروج</div>
+                    </div>
+                    <!-- Content -->
+                    <div class="flex-1 p-4 overflow-hidden">
+                        <!-- Overview -->
+                        <div class="mock-pane active" id="mock-overview">
+                            <div style="font-size:11px;color:rgba(255,255,255,0.25);font-weight:700;margin-bottom:10px;font-family:var(--font-mono)">[ DASHBOARD ]</div>
+                            <div class="grid grid-cols-4 gap-2 mb-3">
+                                <div class="p-2.5 rounded-xl" style="background:rgba(255,183,197,0.06);border:1px solid rgba(255,183,197,0.12)"><div class="h-1.5 w-10 rounded mb-2" style="background:rgba(255,255,255,0.1)"></div><div style="font-size:15px;font-weight:900;color:var(--pink);font-family:var(--font-display)">847</div><div style="font-size:9px;color:rgba(255,183,197,0.45);font-family:var(--font-mono)">أعضاء</div></div>
+                                <div class="p-2.5 rounded-xl" style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.12)"><div class="h-1.5 w-10 rounded mb-2" style="background:rgba(255,255,255,0.1)"></div><div style="font-size:15px;font-weight:900;color:#22c55e;font-family:var(--font-display)">99.9%</div><div style="font-size:9px;color:rgba(34,197,94,0.45);font-family:var(--font-mono)">Uptime</div></div>
+                                <div class="p-2.5 rounded-xl" style="background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.12)"><div class="h-1.5 w-10 rounded mb-2" style="background:rgba(255,255,255,0.1)"></div><div style="font-size:15px;font-weight:900;color:#a78bfa;font-family:var(--font-display)">142</div><div style="font-size:9px;color:rgba(167,139,250,0.45);font-family:var(--font-mono)">تذاكر</div></div>
+                                <div class="p-2.5 rounded-xl" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.12)"><div class="h-1.5 w-10 rounded mb-2" style="background:rgba(255,255,255,0.1)"></div><div style="font-size:15px;font-weight:900;color:#fbbf24;font-family:var(--font-display)">38</div><div style="font-size:9px;color:rgba(251,191,36,0.45);font-family:var(--font-mono)">محظور</div></div>
+                            </div>
+                            <div class="flex gap-2" style="height:120px">
+                                <div class="flex-1 rounded-xl p-2.5 relative overflow-hidden" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05)">
+                                    <div style="font-size:9px;color:rgba(255,255,255,0.18);margin-bottom:4px;font-family:var(--font-mono)">نشاط الأسبوع</div>
+                                    <svg class="absolute bottom-0 left-0 right-0 w-full h-16" preserveAspectRatio="none" viewBox="0 0 400 50" aria-hidden="true">
+                                        <path d="M0,40 C80,20 160,35 240,15 C320,0 380,20 400,10 L400,50 L0,50 Z" fill="rgba(255,183,197,0.1)"/>
+                                        <path d="M0,40 C80,20 160,35 240,15 C320,0 380,20 400,10" fill="none" stroke="rgba(255,183,197,0.45)" stroke-width="1.5"/>
+                                    </svg>
+                                </div>
+                                <div class="w-28 rounded-xl p-2.5" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05)">
+                                    <div style="font-size:9px;color:rgba(255,255,255,0.18);margin-bottom:6px;font-family:var(--font-mono)">توزيع النشاط</div>
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full flex-shrink-0" style="background:rgba(255,183,197,0.25)"></div><div class="h-1 flex-1 rounded-full" style="background:rgba(255,255,255,0.05)"><div class="h-full rounded-full" style="width:78%;background:rgba(255,183,197,0.35)"></div></div><span style="font-size:8px;color:rgba(255,183,197,0.35);font-family:var(--font-mono)">78%</span></div>
+                                        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full flex-shrink-0" style="background:rgba(34,197,94,0.2)"></div><div class="h-1 flex-1 rounded-full" style="background:rgba(255,255,255,0.05)"><div class="h-full rounded-full" style="width:55%;background:rgba(34,197,94,0.3)"></div></div><span style="font-size:8px;color:rgba(34,197,94,0.35);font-family:var(--font-mono)">55%</span></div>
+                                        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full flex-shrink-0" style="background:rgba(167,139,250,0.2)"></div><div class="h-1 flex-1 rounded-full" style="background:rgba(255,255,255,0.05)"><div class="h-full rounded-full" style="width:32%;background:rgba(167,139,250,0.3)"></div></div><span style="font-size:8px;color:rgba(167,139,250,0.35);font-family:var(--font-mono)">32%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top:10px">
+                                <div style="font-size:9px;color:rgba(255,255,255,0.18);margin-bottom:6px;font-family:var(--font-mono)">آخر الأحداث</div>
+                                <div style="display:flex;flex-direction:column;gap:4px">
+                                    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.02);border-radius:8px;padding:5px 8px"><span style="font-size:10px">🎉</span><span style="font-size:9px;color:rgba(255,255,255,0.35)">sara وصلت للمستوى 15</span><span style="font-size:8px;color:rgba(255,255,255,0.12);margin-right:auto;font-family:var(--font-mono)">منذ 2د</span></div>
+                                    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.02);border-radius:8px;padding:5px 8px"><span style="font-size:10px">🔨</span><span style="font-size:9px;color:rgba(255,255,255,0.35)">spam_bot محظور تلقائياً</span><span style="font-size:8px;color:rgba(255,255,255,0.12);margin-right:auto;font-family:var(--font-mono)">منذ 5د</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Protection -->
+                        <div class="mock-pane" id="mock-protection">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                                <span style="font-size:11px;color:#22c55e;font-weight:700;font-family:var(--font-mono)">SHIELD ACTIVE — 0 THREATS</span>
+                                <div style="margin-right:auto;display:flex;gap:4px">
+                                    <span style="font-size:9px;background:rgba(34,197,94,0.08);color:#22c55e;padding:2px 6px;border-radius:6px;border:1px solid rgba(34,197,94,0.18);font-family:var(--font-mono)">Anti-Raid ✓</span>
+                                    <span style="font-size:9px;background:rgba(255,183,197,0.08);color:var(--pink);padding:2px 6px;border-radius:6px;border:1px solid rgba(255,183,197,0.18);font-family:var(--font-mono)">Anti-Spam ✓</span>
+                                </div>
+                            </div>
+                            <div id="mock-terminal" class="terminal-card">
+                                <div class="terminal-header">
+                                    <div class="w-2 h-2 rounded-full" style="background:rgba(239,68,68,0.5)" aria-hidden="true"></div>
+                                    <div class="w-2 h-2 rounded-full" style="background:rgba(234,179,8,0.5)" aria-hidden="true"></div>
+                                    <div class="w-2 h-2 rounded-full" style="background:rgba(34,197,94,0.5)" aria-hidden="true"></div>
+                                    <span style="font-size:10px;color:rgba(255,183,197,0.4);margin-right:auto;font-family:var(--font-mono)">security.log — live</span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" aria-hidden="true"></span>
+                                </div>
+                                <div class="terminal-body" id="terminal-output" style="min-height:220px"></div>
+                            </div>
+                        </div>
+                        <!-- Music -->
+                        <div class="mock-pane" id="mock-music">
+                            <div style="font-size:11px;color:rgba(255,255,255,0.25);font-weight:700;margin-bottom:10px;font-family:var(--font-mono)">[ AUDIO ]</div>
+                            <div class="rounded-xl p-4 mb-3" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05)">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(255,183,197,0.12);color:var(--pink)">♪</div>
+                                    <div class="flex-1">
+                                        <div class="h-2 w-32 rounded mb-1.5" style="background:rgba(255,255,255,0.15)"></div>
+                                        <div class="h-1.5 w-20 rounded mb-2" style="background:rgba(255,255,255,0.08)"></div>
+                                        <div class="w-full h-1 rounded-full" style="background:rgba(255,255,255,0.05)"><div class="h-full rounded-full" style="width:42%;background:var(--pink)"></div></div>
+                                        <div class="flex justify-between mt-1" style="font-size:8px;color:rgba(255,255,255,0.18);font-family:var(--font-mono)"><span>1:32</span><span>3:48</span></div>
+                                    </div>
+                                    <div class="sound-wave flex-shrink-0" id="sound-wave" aria-hidden="true">
+                                        <span style="animation-delay:0s"></span><span style="animation-delay:0.1s"></span>
+                                        <span style="animation-delay:0.2s"></span><span style="animation-delay:0.3s"></span>
+                                        <span style="animation-delay:0.4s"></span><span style="animation-delay:0.15s"></span>
+                                        <span style="animation-delay:0.25s"></span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-center gap-5" style="font-size:16px;color:rgba(255,255,255,0.25)" aria-hidden="true">
+                                    <span>🔀</span><span>⏮</span><span style="color:var(--pink);font-size:20px">⏸</span><span>⏭</span><span>🔁</span>
+                                </div>
+                            </div>
+                            <div style="font-size:9px;color:rgba(255,255,255,0.18);margin-bottom:6px;font-family:var(--font-mono)">QUEUE (3)</div>
+                            <div style="display:flex;flex-direction:column;gap:4px">
+                                <div style="display:flex;align-items:center;gap:6px;background:rgba(255,183,197,0.05);border:1px solid rgba(255,183,197,0.1);border-radius:8px;padding:5px 8px"><span style="font-size:9px;color:var(--pink);font-weight:700;font-family:var(--font-mono)">▶</span><div style="flex:1"><div class="h-1.5 w-24 rounded" style="background:rgba(255,255,255,0.15)"></div></div><span style="font-size:8px;color:rgba(255,255,255,0.18);font-family:var(--font-mono)">3:48</span></div>
+                                <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.02);border-radius:8px;padding:5px 8px"><span style="font-size:9px;color:rgba(255,255,255,0.18);font-family:var(--font-mono)">2</span><div style="flex:1"><div class="h-1.5 w-20 rounded" style="background:rgba(255,255,255,0.08)"></div></div><span style="font-size:8px;color:rgba(255,255,255,0.18);font-family:var(--font-mono)">4:12</span></div>
+                                <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.02);border-radius:8px;padding:5px 8px"><span style="font-size:9px;color:rgba(255,255,255,0.18);font-family:var(--font-mono)">3</span><div style="flex:1"><div class="h-1.5 w-28 rounded" style="background:rgba(255,255,255,0.08)"></div></div><span style="font-size:8px;color:rgba(255,255,255,0.18);font-family:var(--font-mono)">2:55</span></div>
+                            </div>
+                        </div>
+                        <!-- Levels -->
+                        <div class="mock-pane" id="mock-levels">
+                            <div style="font-size:11px;color:rgba(255,255,255,0.25);font-weight:700;margin-bottom:10px;font-family:var(--font-mono)">[ LEADERBOARD ]</div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2 rounded-xl px-3 py-2" style="background:rgba(255,183,197,0.05);border:1px solid rgba(255,183,197,0.12)"><span style="font-size:14px">🥇</span><div class="w-7 h-7 rounded-full flex-shrink-0" style="background:rgba(255,183,197,0.15)"></div><div class="flex-1"><div class="h-1.5 w-20 rounded mb-1.5" style="background:rgba(255,255,255,0.12)"></div><div class="h-1 rounded-full" style="background:rgba(255,255,255,0.04)"><div class="h-full rounded-full" style="width:78%;background:rgba(255,183,197,0.4)"></div></div></div><span style="font-size:10px;font-weight:800;color:var(--pink);font-family:var(--font-mono)">LVL 24</span></div>
+                                <div class="flex items-center gap-2 rounded-xl px-3 py-2" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04)"><span style="font-size:14px">🥈</span><div class="w-7 h-7 rounded-full flex-shrink-0" style="background:rgba(167,139,250,0.15)"></div><div class="flex-1"><div class="h-1.5 w-16 rounded mb-1.5" style="background:rgba(255,255,255,0.12)"></div><div class="h-1 rounded-full" style="background:rgba(255,255,255,0.04)"><div class="h-full rounded-full" style="width:55%;background:rgba(167,139,250,0.35)"></div></div></div><span style="font-size:10px;font-weight:800;color:#a78bfa;font-family:var(--font-mono)">LVL 18</span></div>
+                                <div class="flex items-center gap-2 rounded-xl px-3 py-2" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04)"><span style="font-size:14px">🥉</span><div class="w-7 h-7 rounded-full flex-shrink-0" style="background:rgba(34,197,94,0.12)"></div><div class="flex-1"><div class="h-1.5 w-24 rounded mb-1.5" style="background:rgba(255,255,255,0.12)"></div><div class="h-1 rounded-full" style="background:rgba(255,255,255,0.04)"><div class="h-full rounded-full" style="width:32%;background:rgba(34,197,94,0.3)"></div></div></div><span style="font-size:10px;font-weight:800;color:#22c55e;font-family:var(--font-mono)">LVL 11</span></div>
+                            </div>
+                        </div>
+                        <!-- Logs -->
+                        <div class="mock-pane" id="mock-logs">
+                            <div style="font-size:11px;color:rgba(255,255,255,0.25);font-weight:700;margin-bottom:10px;font-family:var(--font-mono)">[ EVENT LOG ]</div>
+                            <div class="space-y-1.5" style="font-size:10px">
+                                <div class="flex items-center gap-2 px-2 py-2 rounded-lg" style="background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.08)"><span class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background:#f87171" aria-hidden="true"></span><span style="color:rgba(255,255,255,0.18);font-size:9px;font-family:var(--font-mono)">12:41</span><span style="color:#f87171">🔨 محمد_ع تم طرده بواسطة Admin</span></div>
+                                <div class="flex items-center gap-2 px-2 py-2 rounded-lg" style="background:rgba(234,179,8,0.04);border:1px solid rgba(234,179,8,0.08)"><span class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background:#fbbf24" aria-hidden="true"></span><span style="color:rgba(255,255,255,0.18);font-size:9px;font-family:var(--font-mono)">12:38</span><span style="color:#fbbf24">⚠️ تم حذف 23 رسالة spam</span></div>
+                                <div class="flex items-center gap-2 px-2 py-2 rounded-lg" style="background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.08)"><span class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background:#4ade80" aria-hidden="true"></span><span style="color:rgba(255,255,255,0.18);font-size:9px;font-family:var(--font-mono)">12:35</span><span style="color:#4ade80">✅ sara وصلت للمستوى 15</span></div>
+                                <div class="flex items-center gap-2 px-2 py-2 rounded-lg" style="background:rgba(96,165,250,0.04);border:1px solid rgba(96,165,250,0.08)"><span class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background:#60a5fa" aria-hidden="true"></span><span style="color:rgba(255,255,255,0.18);font-size:9px;font-family:var(--font-mono)">12:30</span><span style="color:#60a5fa">🛡️ raid محتمل — تم الإيقاف</span></div>
+                                <div class="flex items-center gap-2 px-2 py-2 rounded-lg" style="background:rgba(255,183,197,0.04);border:1px solid rgba(255,183,197,0.08)"><span class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background:var(--pink)" aria-hidden="true"></span><span style="color:rgba(255,255,255,0.18);font-size:9px;font-family:var(--font-mono)">12:15</span><span style="color:var(--pink)">🎫 تذكرة جديدة من ahmed_k</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ━━━ STATS ━━━ -->
+<section id="stats" class="py-24 relative" style="z-index:10;border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(0,0,0,0.3)">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+            <div class="reveal group cursor-default">
+                <div class="stat-num counter group-hover:text-pink-300" data-target="{{ users_count or 0 }}">0</div>
+                <div class="mt-3 text-xs font-bold uppercase tracking-[0.25em]"
+                     style="color:rgba(255,255,255,0.3);font-family:var(--font-mono)" data-i18n="indeex.عضو_محمي">عضو محمي</div>
+            </div>
+            <div class="reveal group cursor-default" style="transition-delay:0.1s">
+                <div class="stat-num counter group-hover:text-pink-300" data-target="{{ guilds_count or 0 }}">0</div>
+                <div class="mt-3 text-xs font-bold uppercase tracking-[0.25em]"
+                     style="color:rgba(255,255,255,0.3);font-family:var(--font-mono)" data-i18n="indeex.سيرفر_نشط">سيرفر نشط</div>
+            </div>
+            <div class="reveal group cursor-default" style="transition-delay:0.2s">
+                <div class="stat-num group-hover:text-pink-300">99.9<span style="font-size:0.55em">%</span></div>
+                <div class="mt-3 text-xs font-bold uppercase tracking-[0.25em]"
+                     style="color:rgba(255,255,255,0.3);font-family:var(--font-mono)" data-i18n="indeex.وقت_التشغيل">وقت التشغيل</div>
+            </div>
+            <div class="reveal group cursor-default" style="transition-delay:0.3s">
+                <div class="stat-num group-hover:text-pink-300">24/7</div>
+                <div class="mt-3 text-xs font-bold uppercase tracking-[0.25em]"
+                     style="color:rgba(255,255,255,0.3);font-family:var(--font-mono)" data-i18n="indeex.دعم_مستمر">دعم مستمر</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ━━━ FEATURES ━━━ -->
+<section id="features" class="py-28 relative" style="z-index:10">
+    <div class="container mx-auto px-4 max-w-6xl">
+        <div class="text-center mb-16 reveal">
+            <div class="sec-label mb-5" style="justify-content:center">المميزات</div>
+            <h2 class="font-black mb-4"
+                style="font-family:var(--font-display);font-size:clamp(2rem,4vw,3.5rem);text-wrap:balance;letter-spacing:-0.02em">
+                كل ما تحتاجه <em style="color:var(--pink);font-style:italic">وأكثر</em>
+            </h2>
+            <p style="color:var(--muted);max-width:480px;margin:0 auto" data-i18n="indeex.أدوات_احترافية_مجمعة_في_م">
+                أدوات احترافية مجمعة في مكان واحد، صُممت خصيصاً للمجتمعات العربية.
+            </p>
+        </div>
+
+        <!-- Bento Grid (inspired by Magic MCP Bento Monochrome: col-span-4 for large cards) -->
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px">
+
+            <!-- Large card: 4 cols -->
+            <div class="feat-card reveal" style="grid-column:span 4">
+                <div class="corners"><span></span><span></span><span></span><span></span></div>
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl mb-6"
+                     style="background:rgba(255,183,197,0.08);color:var(--pink)">
+                    <i class="fa-solid fa-shield-cat" aria-hidden="true"></i>
+                </div>
+                <div class="sec-label mb-3">01 / حماية</div>
+                <h3 class="font-bold text-white mb-3"
+                    style="font-family:var(--font-display);font-size:1.5rem;font-style:italic"
+                    data-i18n="indeex.حماية_سيبرانية_متطورة">حماية سيبرانية متطورة</h3>
+                <p style="color:var(--muted);line-height:1.7;margin-bottom:24px" data-i18n="indeex.نظام_ذكاء_اصطناعي_يحلل_أن">
+                    نظام ذكاء اصطناعي يحلل أنماط السلوك ويتصدى للريد، النيوك، والسبام في الوقت الفعلي. مع نظام إيسكاليشن متدرج من تحذير حتى طرد كامل.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 text-xs font-bold rounded-full" style="background:rgba(34,197,94,0.08);color:#4ade80;border:1px solid rgba(34,197,94,0.18);font-family:var(--font-mono)">Anti-Raid</span>
+                    <span class="px-3 py-1 text-xs font-bold rounded-full" style="background:rgba(96,165,250,0.08);color:#60a5fa;border:1px solid rgba(96,165,250,0.18);font-family:var(--font-mono)">Anti-Spam</span>
+                    <span class="px-3 py-1 text-xs font-bold rounded-full" style="background:rgba(234,179,8,0.08);color:#fbbf24;border:1px solid rgba(234,179,8,0.18);font-family:var(--font-mono)">Anti-Nuke</span>
+                    <span class="px-3 py-1 text-xs font-bold rounded-full" style="background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.18);font-family:var(--font-mono)">Link Filter</span>
+                </div>
+            </div>
+
+            <!-- Small card: 2 cols -->
+            <div class="feat-card reveal" style="grid-column:span 2;transition-delay:0.1s">
+                <div class="corners"><span></span><span></span><span></span><span></span></div>
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl mb-6"
+                     style="background:rgba(167,139,250,0.08);color:#a78bfa">
+                    <i class="fa-solid fa-music" aria-hidden="true"></i>
+                </div>
+                <div class="sec-label mb-3">02 / صوت</div>
+                <h3 class="font-bold text-white mb-3"
+                    style="font-family:var(--font-display);font-size:1.2rem;font-style:italic"
+                    data-i18n="indeex.صوتيات_Hi_Fi">صوتيات Hi‑Fi</h3>
+                <p style="color:var(--muted);font-size:0.9rem;line-height:1.6" data-i18n="indeex.مشغل_موسيقى_بجودة_عالية،">
+                    مشغل موسيقى بجودة عالية، يوتيوب، ساوندكلاود — بدون تقطيع.
+                </p>
+            </div>
+
+            <!-- Small: 2 cols -->
+            <div class="feat-card reveal" style="grid-column:span 2;transition-delay:0.15s">
+                <div class="corners"><span></span><span></span><span></span><span></span></div>
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl mb-6"
+                     style="background:rgba(34,197,94,0.08);color:#4ade80">
+                    <i class="fa-solid fa-ticket" aria-hidden="true"></i>
+                </div>
+                <div class="sec-label mb-3">03 / دعم</div>
+                <h3 class="font-bold text-white mb-3"
+                    style="font-family:var(--font-display);font-size:1.2rem;font-style:italic"
+                    data-i18n="indeex.نظام_تذاكر_ذكي">نظام تذاكر ذكي</h3>
+                <p style="color:var(--muted);font-size:0.9rem;line-height:1.6" data-i18n="indeex.تذاكر_دعم_متكاملة_مع_لوغا">
+                    تذاكر دعم متكاملة مع لوغات، تقييم، وأزرار مخصصة.
+                </p>
+            </div>
+
+            <!-- Small: 2 cols -->
+            <div class="feat-card reveal" style="grid-column:span 2;transition-delay:0.2s">
+                <div class="corners"><span></span><span></span><span></span><span></span></div>
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl mb-6"
+                     style="background:rgba(251,191,36,0.08);color:#fbbf24">
+                    <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                </div>
+                <div class="sec-label mb-3">04 / لفلات</div>
+                <h3 class="font-bold text-white mb-3"
+                    style="font-family:var(--font-display);font-size:1.2rem;font-style:italic"
+                    data-i18n="indeex.نظام_لفلات_ورتب">نظام لفلات ورتب</h3>
+                <p style="color:var(--muted);font-size:0.9rem;line-height:1.6" data-i18n="indeex.ترقيات_تلقائية_بالنشاط_مع">
+                    ترقيات تلقائية بالنشاط مع بطاقات XP وبورد الصدارة.
+                </p>
+            </div>
+
+            <!-- Small: 2 cols -->
+            <div class="feat-card reveal" style="grid-column:span 2;transition-delay:0.25s">
+                <div class="corners"><span></span><span></span><span></span><span></span></div>
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl mb-6"
+                     style="background:rgba(239,68,68,0.08);color:#f87171">
+                    <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
+                </div>
+                <div class="sec-label mb-3">05 / ترفيه</div>
+                <h3 class="font-bold text-white mb-3"
+                    style="font-family:var(--font-display);font-size:1.2rem;font-style:italic"
+                    data-i18n="base.استوديو_الألعاب">استوديو الألعاب</h3>
+                <p style="color:var(--muted);font-size:0.9rem;line-height:1.6" data-i18n="indeex.روليت،_كود_نيمز،_عائلتي_ت">
+                    روليت، كود نيمز، عائلتي تربح — لإحياء الشات.
+                </p>
+            </div>
+
+            <!-- Large card: 4 cols -->
+            <div class="feat-card reveal" style="grid-column:span 4;transition-delay:0.3s">
+                <div class="corners"><span></span><span></span><span></span><span></span></div>
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl mb-6"
+                     style="background:rgba(96,165,250,0.08);color:#60a5fa">
+                    <i class="fa-solid fa-scroll" aria-hidden="true"></i>
+                </div>
+                <div class="sec-label mb-3">06 / سجلات</div>
+                <h3 class="font-bold text-white mb-3"
+                    style="font-family:var(--font-display);font-size:1.5rem;font-style:italic"
+                    data-i18n="indeex.سجلات_شاملة_Logs">سجلات شاملة (Logs)</h3>
+                <p style="color:var(--muted);line-height:1.7;margin-bottom:24px" data-i18n="indeex.لا_شيء_يفوتك_سجل_لكل_حذ">
+                    لا شيء يفوتك — سجل لكل حذف، تعديل، دخول، خروج، وتغيير صلاحيات. مع فلاتر متقدمة وتنبيهات فورية.
+                </p>
+                <div class="grid grid-cols-3 gap-3" style="max-width:300px">
+                    <div class="rounded-xl p-3 text-center" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)">
+                        <div class="text-xl mb-1" aria-hidden="true">📝</div><div class="text-xs font-bold" style="color:rgba(255,255,255,0.3);font-family:var(--font-mono)" data-i18n="indeex.رسائل">رسائل</div>
+                    </div>
+                    <div class="rounded-xl p-3 text-center" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)">
+                        <div class="text-xl mb-1" aria-hidden="true">👤</div><div class="text-xs font-bold" style="color:rgba(255,255,255,0.3);font-family:var(--font-mono)" data-i18n="indeex.أعضاء">أعضاء</div>
+                    </div>
+                    <div class="rounded-xl p-3 text-center" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)">
+                        <div class="text-xl mb-1" aria-hidden="true">⚙️</div><div class="text-xs font-bold" style="color:rgba(255,255,255,0.3);font-family:var(--font-mono)" data-i18n="indeex.سيرفر">سيرفر</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Small: 2 cols -->
+            <div class="feat-card reveal" style="grid-column:span 2;transition-delay:0.35s">
+                <div class="corners"><span></span><span></span><span></span><span></span></div>
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl mb-6"
+                     style="background:rgba(255,183,197,0.08);color:var(--pink)">
+                    <i class="fa-solid fa-mosque" aria-hidden="true"></i>
+                </div>
+                <div class="sec-label mb-3">07 / إسلامي</div>
+                <h3 class="font-bold text-white mb-3"
+                    style="font-family:var(--font-display);font-size:1.2rem;font-style:italic"
+                    data-i18n="base.المركز_الإسلامي">المركز الإسلامي</h3>
+                <p style="color:var(--muted);font-size:0.9rem;line-height:1.6" data-i18n="indeex.أوقات_الصلاة،_الأذكار_الت">
+                    أوقات الصلاة، الأذكار التلقائية، وبث القرآن الكريم.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ━━━ STEPS ━━━ -->
+<section class="py-24 relative" style="z-index:10;border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(0,0,0,0.25)">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <div class="text-center mb-16 reveal">
+            <div class="sec-label mb-5" style="justify-content:center">البداية</div>
+            <h2 class="font-black mb-3"
+                style="font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);text-wrap:balance;letter-spacing:-0.02em">
+                ابدأ رحلتك في <em style="color:var(--pink);font-style:italic" data-i18n="indeex.3_خطوات">3 خطوات</em>
+            </h2>
+            <p style="color:var(--muted)" data-i18n="indeex.لا_تعقيد،_لا_انتظار_النظ">لا تعقيد، لا انتظار. النظام مصمم ليعمل فوراً.</p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Step 1 -->
+            <div class="relative p-8 rounded-2xl reveal" style="background:var(--s1);border:1px solid var(--border)">
+                <div class="step-num" aria-hidden="true">01</div>
+                <div class="flex items-start gap-6">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-black flex-shrink-0 mt-1"
+                         style="background:var(--pink);font-family:var(--font-display);box-shadow:0 0 24px var(--pink-glow)">1</div>
+                    <div>
+                        <h3 class="font-bold text-white mb-2 flex items-center gap-2" style="font-size:1.15rem">
+                            <i class="fa-brands fa-discord" style="color:#5865F2" aria-hidden="true"></i> تسجيل الدخول
+                        </h3>
+                        <p style="color:var(--muted);font-size:0.9rem;line-height:1.7;max-width:500px" data-i18n="indeex.سجل_دخولك_بحساب_ديسكورد_ب">
+                            سجل دخولك بحساب ديسكورد بضغطة واحدة — بدون كلمة مرور منفصلة أو تحقق معقد.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="relative p-8 rounded-2xl reveal" style="background:var(--s1);border:1px solid var(--border);transition-delay:0.1s">
+                <div class="step-num" aria-hidden="true">02</div>
+                <div class="flex items-start gap-6">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-white flex-shrink-0 mt-1"
+                         style="background:transparent;border:2px solid rgba(255,183,197,0.4);font-family:var(--font-display)">2</div>
+                    <div>
+                        <h3 class="font-bold text-white mb-2 flex items-center gap-2" style="font-size:1.15rem">
+                            <i class="fa-solid fa-server" style="color:var(--pink)" aria-hidden="true"></i> اختر سيرفرك
+                        </h3>
+                        <p style="color:var(--muted);font-size:0.9rem;line-height:1.7;max-width:500px" data-i18n="indeex.اختر_السيرفر_الذي_تديره_م">
+                            اختر السيرفر الذي تديره من القائمة، وستنتقل فوراً للوحة التحكم المخصصة له.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="relative p-8 rounded-2xl reveal" style="background:var(--s1);border:1px solid var(--border);transition-delay:0.2s">
+                <div class="step-num" aria-hidden="true">03</div>
+                <div class="flex items-start gap-6">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-black flex-shrink-0 mt-1"
+                         style="background:#fff;font-family:var(--font-display);box-shadow:0 0 20px rgba(255,255,255,0.12)">3</div>
+                    <div>
+                        <h3 class="font-bold text-white mb-2 flex items-center gap-2" style="font-size:1.15rem">
+                            <i class="fa-solid fa-rocket" style="color:var(--pink)" aria-hidden="true"></i> استمتع بالقيادة
+                        </h3>
+                        <p style="color:var(--muted);font-size:0.9rem;line-height:1.7;max-width:500px" data-i18n="indeex.فعّل_الحماية،_اضبط_الترحي">
+                            فعّل الحماية، اضبط الترحيب، شغّل الموسيقى — كل شيء بنقرة من لوحة التحكم.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ━━━ REVIEWS ━━━ -->
+<section id="reviews" class="py-28 relative" style="z-index:10">
+    <div class="container mx-auto px-4 max-w-5xl">
+        <div class="text-center mb-14 reveal">
+            <div class="sec-label mb-5" style="justify-content:center">تقييمات</div>
+            <h2 class="font-black mb-3"
+                style="font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);text-wrap:balance;letter-spacing:-0.02em">
+                سيرفرات تثق بـ <em style="color:var(--pink);font-style:italic" data-i18n="game_studio.لونا">لونا</em>
+            </h2>
+            <p style="color:var(--muted)" data-i18n="indeex.آراء_حقيقية_من_مديري_مجتم">آراء حقيقية من مديري مجتمعات</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-5">
+            <div class="review-card reveal">
+                <div class="corners"><span></span><span></span><span></span><span></span></div>
+                <div class="flex gap-0.5 mb-5" aria-label="5 نجوم">
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                </div>
+                <blockquote class="mb-6" data-i18n="indeex.أفضل_بوت_إدارة_جربته_ال">
+                    "أفضل بوت إدارة جربته. الداشبورد سهل، الحماية قوية، وكل شي بالعربي."
+                </blockquote>
+                <div class="flex items-center gap-3 pt-4" style="border-top:1px solid rgba(255,255,255,0.05)">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm"
+                         style="background:rgba(255,183,197,0.12);color:var(--pink)">A</div>
+                    <div>
+                        <div class="font-bold text-white text-sm">Ahmed Ali</div>
+                        <div class="text-xs" style="color:var(--muted);font-family:var(--font-mono)">Server Owner</div>
+                    </div>
+                </div>
+            </div>
+            <div class="review-card reveal" style="transition-delay:0.1s">
+                <div class="corners"><span></span><span></span><span></span><span></span></div>
+                <div class="flex gap-0.5 mb-5" aria-label="5 نجوم">
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                </div>
+                <blockquote class="mb-6" data-i18n="indeex.نظام_الحماية_رهيب_صدّ_أ">
+                    "نظام الحماية رهيب! صدّ أكثر من محاولة ريد ونيوك على سيرفري. يشتغل لوحده."
+                </blockquote>
+                <div class="flex items-center gap-3 pt-4" style="border-top:1px solid rgba(255,255,255,0.05)">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm"
+                         style="background:rgba(34,197,94,0.12);color:#4ade80">S</div>
+                    <div>
+                        <div class="font-bold text-white text-sm">Sarah M.</div>
+                        <div class="text-xs" style="color:var(--muted);font-family:var(--font-mono)">Community Manager</div>
+                    </div>
+                </div>
+            </div>
+            <div class="review-card reveal" style="transition-delay:0.2s">
+                <div class="corners"><span></span><span></span><span></span><span></span></div>
+                <div class="flex gap-0.5 mb-5" aria-label="5 نجوم">
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star text-sm" style="color:#fbbf24" aria-hidden="true"></i>
+                </div>
+                <blockquote class="mb-6" data-i18n="indeex.التصميم_جميل_جداً_والموس">
+                    "التصميم جميل والموسيقى تشتغل بجودة ما شفتها ببوت ثاني. استوديو الألعاب حيّا السيرفر!"
+                </blockquote>
+                <div class="flex items-center gap-3 pt-4" style="border-top:1px solid rgba(255,255,255,0.05)">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm"
+                         style="background:rgba(167,139,250,0.12);color:#a78bfa">O</div>
+                    <div>
+                        <div class="font-bold text-white text-sm">Omar K.</div>
+                        <div class="text-xs" style="color:var(--muted);font-family:var(--font-mono)">Developer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ━━━ CTA ━━━ -->
+<section class="py-24 relative overflow-hidden" style="z-index:10">
+    <div class="container mx-auto px-4 max-w-3xl text-center reveal">
+        <div class="relative rounded-3xl p-12 overflow-hidden"
+             style="background:var(--s1);border:1px solid var(--border-pink)">
+            <!-- Glow -->
+            <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full pointer-events-none"
+                 style="background:radial-gradient(circle,rgba(255,183,197,0.08) 0%,transparent 70%)"></div>
+            <div class="absolute -bottom-16 -left-16 w-48 h-48 rounded-full pointer-events-none"
+                 style="background:radial-gradient(circle,rgba(255,183,197,0.05) 0%,transparent 70%)"></div>
+            <!-- Pink corner accent line -->
+            <div class="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                 style="background:linear-gradient(90deg,transparent,var(--pink),transparent)"></div>
+            <div class="relative" style="z-index:1">
+                <div class="sec-label mb-6" style="justify-content:center">ابدأ الآن</div>
+                <h2 class="font-black mb-4"
+                    style="font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4rem);text-wrap:balance;letter-spacing:-0.02em"
+                    data-i18n="indeex.جاهز_تبدأ؟">جاهز تبدأ؟</h2>
+                <p class="text-lg mb-8" style="color:var(--muted)" data-i18n="indeex.انضم_لآلاف_المجتمعات_التي">
+                    انضم للمجتمعات التي تثق بلونا. مجاناً، الآن، بدون تعقيد.
+                </p>
+                <a href="{{ login_url }}" class="btn-primary inline-flex items-center gap-3 px-10 py-5 rounded-2xl text-lg font-black overflow-hidden">
+                    <span data-i18n="indeex.ابدأ_مجاناً">ابدأ مجاناً</span>
+                    <i class="fa-brands fa-discord" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ━━━ FOOTER ━━━ -->
+<footer style="background:#020202;border-top:1px solid rgba(255,255,255,0.04);padding-top:64px;padding-bottom:32px">
+    <div class="container mx-auto px-4 max-w-6xl">
+        <div class="grid md:grid-cols-4 gap-10 mb-12">
+            <div class="col-span-2">
+                <div class="flex items-center gap-2 mb-4">
+                    <img src="/static/lona.png" class="w-8 h-8 rounded-xl" alt="Lona"
+                         style="filter:grayscale(1);transition:filter 0.3s"
+                         onmouseover="this.style.filter='none'" onmouseout="this.style.filter='grayscale(1)'">
+                    <span class="text-xl font-black" style="font-family:var(--font-body)">LONA SYSTEM</span>
+                </div>
+                <p class="text-sm max-w-xs mb-6 leading-relaxed" style="color:var(--muted)" data-i18n="indeex.نظام_متكامل_صُنع_بحب_وشغف">
+                    نظام متكامل صُنع بحب وشغف لتقديم تجربة إدارة استثنائية للمجتمعات العربية.
+                </p>
+                <a href="https://discord.gg/BSxCa548Gu" target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition"
+                   style="background:rgba(88,101,242,0.08);color:#7289da;border:1px solid rgba(88,101,242,0.18)"
+                   onmouseover="this.style.background='rgba(88,101,242,0.16)'" onmouseout="this.style.background='rgba(88,101,242,0.08)'">
+                    <i class="fa-brands fa-discord" aria-hidden="true"></i> سيرفر الدعم
+                </a>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 text-sm" style="font-family:var(--font-mono);letter-spacing:0.1em" data-i18n="indeex.النظام">[ النظام ]</h4>
+                <ul class="space-y-3 text-sm" style="color:var(--muted)">
+                    <li><a href="/status" class="hover:text-white transition flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500" aria-hidden="true"></span> حالة الخدمة
+                    </a></li>
+                    <li><a href="/updates" class="hover:text-white transition" data-i18n="indeex.التحديثات">التحديثات</a></li>
+                    <li><a href="/team" class="hover:text-white transition">المطور</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 text-sm" style="font-family:var(--font-mono);letter-spacing:0.1em" data-i18n="indeex.قانوني">[ قانوني ]</h4>
+                <ul class="space-y-3 text-sm" style="color:var(--muted)">
+                    <li><a href="/pricing" class="hover:text-white transition" data-i18n="general_settings.الأسعار">الأسعار</a></li>
+                    <li><a href="/privacy" class="hover:text-white transition">الخصوصية</a></li>
+                    <li><a href="/terms" class="hover:text-white transition">شروط الاستخدام</a></li>
+                    <li><a href="/refund" class="hover:text-white transition">سياسة الاسترداد</a></li>
+                    <li><a href="mailto:jn3551220@gmail.com" class="hover:text-white transition" style="font-family:var(--font-mono);font-size:0.75rem">jn3551220@gmail.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="pt-6 flex flex-col md:flex-row justify-between items-center gap-3"
+             style="border-top:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.25);font-size:0.75rem">
+            <div class="flex flex-col gap-1.5 text-center md:text-right">
+                <span>&copy; 2026 Lona System. Powered by <strong style="color:rgba(255,255,255,0.4)">Talin</strong>. All rights reserved.</span>
+                <span style="color:rgba(255,255,255,0.15);font-size:10px">Our order process is conducted by our online reseller <a href="https://paddle.com" target="_blank" rel="noopener" class="underline" style="text-underline-offset:3px">Paddle.com</a>. Paddle.com is the Merchant of Record for all our orders.</span>
+            </div>
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-full"
+                 style="background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.1)">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden="true"></span>
+                <span style="font-family:var(--font-mono);color:rgba(34,197,94,0.6);font-size:10px;letter-spacing:0.1em">ALL SYSTEMS OPERATIONAL</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Tailwind CDN (needed for grid/flex utilities used in mock dashboard) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+    theme: { extend: { fontFamily: { sans: ['Cairo','sans-serif'] } } }
+}
+</script>
+
+<script>
+// ━━━ VanillaTilt ━━━
+VanillaTilt.init(document.querySelectorAll("[data-tilt]"), { max: 3, speed: 600, glare: true, "max-glare": 0.06 });
+
+// ━━━ Custom Cursor ━━━
+(function() {
+    const cur = document.getElementById('cur');
+    const ring = document.getElementById('cur-ring');
+    if (!cur || !ring) return;
+    let rx = 0, ry = 0;
+    window.addEventListener('mousemove', e => {
+        cur.style.left = e.clientX + 'px';
+        cur.style.top  = e.clientY + 'px';
+        rx += (e.clientX - rx) * 0.18;
+        ry += (e.clientY - ry) * 0.18;
+        ring.style.left = rx + 'px';
+        ring.style.top  = ry + 'px';
+    }, {passive:true});
+    function animRing() {
+        const el = document.querySelector(':hover');
+        const isClickable = el && (el.tagName === 'A' || el.tagName === 'BUTTON' || el.closest('a') || el.closest('button'));
+        ring.style.width  = isClickable ? '44px' : '28px';
+        ring.style.height = isClickable ? '44px' : '28px';
+        ring.style.borderColor = isClickable ? 'rgba(255,183,197,0.8)' : 'rgba(255,183,197,0.4)';
+        requestAnimationFrame(animRing);
+    }
+    animRing();
+})();
+
+// ━━━ Grain Canvas ━━━
+(function() {
+    const c = document.getElementById('grain-canvas');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize, {passive:true});
+    function drawGrain() {
+        const w = c.width, h = c.height;
+        const img = ctx.createImageData(w, h);
+        for (let i = 0; i < img.data.length; i += 4) {
+            const v = Math.random() * 255 | 0;
+            img.data[i] = img.data[i+1] = img.data[i+2] = v;
+            img.data[i+3] = 255;
+        }
+        ctx.putImageData(img, 0, 0);
+    }
+    drawGrain();
+    setInterval(drawGrain, 80);
+})();
+
+// ━━━ Particles (pink only — no purple) ━━━
+(function() {
+    const canvas = document.getElementById('particles-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize, {passive:true});
+    class Particle {
+        constructor() { this.reset(); }
+        reset() {
+            this.x  = Math.random() * W;
+            this.y  = Math.random() * H;
+            this.r  = Math.random() * 1.2 + 0.3;
+            this.vx = (Math.random() - 0.5) * 0.25;
+            this.vy = (Math.random() - 0.5) * 0.25;
+            this.a  = Math.random() * 0.35 + 0.05;
+        }
+        update() {
+            this.x += this.vx; this.y += this.vy;
+            if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,183,197,${this.a})`;
+            ctx.fill();
+        }
+    }
+    for (let i = 0; i < 60; i++) particles.push(new Particle());
+    let mx = -9999, my = -9999;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, {passive:true});
+    function loop() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => {
+            const dx = mx - p.x, dy = my - p.y;
+            const d  = Math.sqrt(dx*dx + dy*dy);
+            if (d < 100) { p.vx += dx/d*0.025; p.vy += dy/d*0.025; p.vx *= 0.96; p.vy *= 0.96; }
+            p.update(); p.draw();
+        });
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const d  = Math.sqrt(dx*dx + dy*dy);
+                if (d < 70) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(255,183,197,${0.05 * (1 - d/70)})`;
+                    ctx.lineWidth = 0.4;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(loop);
+    }
+    loop();
+})();
+
+// ━━━ Counters ━━━
+const counters = document.querySelectorAll('.counter');
+let counted = false;
+function runCounters() {
+    if (counted) return;
+    counted = true;
+    counters.forEach(el => {
+        const target = +el.dataset.target;
+        if (!target) { el.textContent = '0'; return; }
+        const dur = 1800, step = 16;
+        const inc = target / (dur / step);
+        let cur = 0;
+        const t = setInterval(() => {
+            cur += inc;
+            if (cur >= target) { el.textContent = target.toLocaleString('ar') + '+'; clearInterval(t); }
+            else el.textContent = Math.floor(cur).toLocaleString('ar');
+        }, step);
+    });
+}
+
+// ━━━ Reveal on Scroll ━━━
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            if (e.target.closest('#stats')) runCounters();
+        }
+    });
+}, { threshold: 0.12 });
+reveals.forEach(r => observer.observe(r));
+
+// ━━━ Typing Effect ━━━
+(function() {
+    const el = document.getElementById('typing-text');
+    if (!el) return;
+    const phrases = ['بذكاء مطلق.', 'بسرعة فائقة.', 'بعربية 100٪.', 'بثقة تامة.'];
+    let pi = 0, ci = 0, deleting = false, wait = 0;
+    function tick() {
+        const phrase = phrases[pi];
+        if (!deleting) {
+            el.textContent = phrase.slice(0, ++ci);
+            if (ci === phrase.length) { deleting = true; wait = 40; }
+        } else {
+            if (wait-- > 0) { setTimeout(tick, 40); return; }
+            el.textContent = phrase.slice(0, --ci);
+            if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; wait = 0; }
+        }
+        setTimeout(tick, deleting ? 40 : 80);
+    }
+    setTimeout(tick, 1200);
+})();
+
+// ━━━ Mock Dashboard ━━━
+function switchMockTab(name, btn) {
+    document.querySelectorAll('.mock-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.mock-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const pane = document.getElementById('mock-' + name);
+    if (pane) pane.classList.add('active');
+    if (name === 'protection') startTerminal();
+}
+
+// ━━━ Terminal Live Log ━━━
+let terminalRunning = false;
+function startTerminal() {
+    if (terminalRunning) return;
+    terminalRunning = true;
+    const out = document.getElementById('terminal-output');
+    if (!out) return;
+    out.innerHTML = '';
+    const logs = [
+        {c:'log-ok',   t:'[SYSTEM]',  m:'Anti-Raid نشط — يراقب 847 عضو'},
+        {c:'log-ban',  t:'[BAN]',     m:'raid_bot_001 محظور تلقائياً'},
+        {c:'log-block',t:'[BLOCK]',   m:'رابط مشبوه في #عام محذوف'},
+        {c:'log-warn', t:'[WARN]',    m:'user_4421 — تحذير #2/3'},
+        {c:'log-ok',   t:'[SHIELD]',  m:'محاولة Nuke أوقفت في 0.3s'},
+        {c:'log-ban',  t:'[BAN]',     m:'spam_account_77 محظور'},
+        {c:'log-block',t:'[FILTER]',  m:'7 رسائل متكررة تم مسحها'},
+        {c:'log-ok',   t:'[SYSTEM]',  m:'تقرير أمني: 0 تهديدات نشطة ✓'},
+    ];
+    let i = 0;
+    function addLine() {
+        if (i >= logs.length || !document.getElementById('mock-protection')?.classList.contains('active')) {
+            terminalRunning = false; return;
+        }
+        const now = new Date();
+        const ts  = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+        const l   = logs[i++];
+        const line = document.createElement('div');
+        line.className = 'log-line';
+        line.innerHTML = `<span class="ts">${ts}</span><span class="${l.c} font-bold">${l.t}</span><span style="color:rgba(255,255,255,0.55)">${l.m}</span>`;
+        out.appendChild(line);
+        out.scrollTop = out.scrollHeight;
+        setTimeout(addLine, 600 + Math.random() * 400);
+    }
+    addLine();
+}
+</script>
+
+<!-- ━━━ Smart Navigation ━━━ -->
+<script>
+(function() {
+    const nav      = document.getElementById('main-nav');
+    const bar      = document.getElementById('announcement-bar');
+    const progress = document.getElementById('scroll-progress');
+    const scrollBtn= document.getElementById('scroll-top-btn');
+    const navLinks = document.querySelectorAll('.nav-link[data-section]');
+    const sections = ['features', 'stats', 'reviews'];
+    window.addEventListener('scroll', function() {
+        const scrollY = window.scrollY;
+        const docH    = document.documentElement.scrollHeight - window.innerHeight;
+        if (progress) progress.style.width = (docH > 0 ? scrollY / docH * 100 : 0) + '%';
+        if (nav) {
+            const barH = bar ? bar.offsetHeight : 34;
+            nav.style.top = Math.max(0, barH - scrollY) + 'px';
+            nav.classList.toggle('scrolled', scrollY > 60);
+        }
+        if (scrollBtn) scrollBtn.classList.toggle('visible', scrollY > 400);
+        let current = '';
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && scrollY >= el.offsetTop - 120) current = id;
+        });
+        navLinks.forEach(link => link.classList.toggle('active', link.dataset.section === current));
+    }, {passive:true});
+})();
+</script>
+
+<!-- ━━━ Language Picker ━━━ -->
+<script>
+var _il = localStorage.getItem('lonaLang');
+if (_il) {
+    var el = document.getElementById('index-lang-label');
+    if (el) {
+        if (_il === 'ar') {
+            el.innerHTML = '<svg width="28" height="18" viewBox="0 0 34 22" style="vertical-align:middle;"><rect width="34" height="22" rx="6" fill="#1a6b3a"/><text x="17" y="15" text-anchor="middle" font-family="Cairo,Arial" font-weight="900" font-size="14" fill="white" dy="-1">ع</text></svg>';
+        } else { el.textContent = '🇬🇧 EN'; }
+    }
+}
+function toggleIndexLang(e) {
+    e.stopPropagation();
+    var p = document.getElementById('index-lang-picker');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+function setIndexLang(code, flag) {
+    localStorage.setItem('lonaLang', code);
+    var el = document.getElementById('index-lang-label');
+    if (el) {
+        if (code === 'ar') {
+            el.innerHTML = '<svg width="28" height="18" viewBox="0 0 34 22" style="vertical-align:middle;"><rect width="34" height="22" rx="6" fill="#1a6b3a"/><text x="17" y="15" text-anchor="middle" font-family="Cairo,Arial" font-weight="900" font-size="14" fill="white" dy="-1">ع</text></svg>';
+        } else { el.textContent = flag; }
+    }
+    document.getElementById('index-lang-picker').style.display = 'none';
+}
+document.addEventListener('click', function() {
+    var p = document.getElementById('index-lang-picker');
+    if (p) p.style.display = 'none';
+});
+</script>
+
+<!-- ━━━ lona-smart-scale ━━━ -->
+<script id="lona-scale">
+(function(){
+  var isMobile=window.innerWidth<=992||(/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)&&window.screen.width<=992);
+  if(!isMobile)return;
+  var mainEl=document.querySelector('main')||document.querySelector('.main');
+  if(!mainEl)return;
+  document.body.style.paddingTop='54px';
+  function applyScale(){
+    var sw=window.innerWidth;
+    var scale=Math.min(1.0,Math.max(0.52,sw/1080));
+    mainEl.style.transformOrigin='right top';
+    mainEl.style.transform='scale('+scale+')';
+    mainEl.style.width=(100/scale)+'%';
+    mainEl.style.paddingTop='0';
+    mainEl.style.marginRight='0';
+    var realH=mainEl.getBoundingClientRect().height;
+    document.body.style.height=(realH+54+10)+'px';
+    document.body.style.minHeight='unset';
+  }
+  applyScale();
+  if(window.ResizeObserver)new ResizeObserver(applyScale).observe(mainEl);
+  window.addEventListener('resize',applyScale,{passive:true});
+  window.addEventListener('orientationchange',function(){setTimeout(applyScale,350);});
+})();
+</script>
+</body>
+</html>
