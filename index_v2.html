@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cairo:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -43,21 +44,8 @@ body{
   overflow-x:hidden;-webkit-font-smoothing:antialiased;
 }
 
-/* grain */
-body::before{
-  content:'';position:fixed;inset:-100px;
-  width:calc(100% + 200px);height:calc(100% + 200px);
-  background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
-  opacity:0.028;pointer-events:none;z-index:9998;
-  animation:grain .9s steps(1) infinite;
-}
-@keyframes grain{
-  0%,100%{transform:translate(0,0)}11%{transform:translate(-2%,-3%)}
-  22%{transform:translate(3%,2%)}33%{transform:translate(-1%,4%)}
-  44%{transform:translate(4%,-2%)}55%{transform:translate(-3%,1%)}
-  66%{transform:translate(2%,3%)}77%{transform:translate(-4%,-1%)}
-  88%{transform:translate(1%,-4%)}
-}
+/* grain - canvas based, no SVG in CSS */
+#grain-canvas{position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.04}
 
 /* top line */
 .accent-line{
@@ -331,6 +319,7 @@ img{max-width:100%}
 </head>
 <body>
 
+<canvas id="grain-canvas"></canvas>
 <div class="accent-line"></div>
 <div id="cur"></div>
 <div id="cur-ring"></div>
@@ -934,6 +923,29 @@ loadAll();
 </script>
 
 <script>
+/* ── Grain Canvas ── */
+(function(){
+  var c = document.getElementById('grain-canvas');
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  var w, h;
+  function resize(){ w = c.width = window.innerWidth; h = c.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  function draw(){
+    var img = ctx.createImageData(w, h);
+    var d = img.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var v = Math.random() * 255 | 0;
+      d[i] = d[i+1] = d[i+2] = v;
+      d[i+3] = 12;
+    }
+    ctx.putImageData(img, 0, 0);
+    setTimeout(draw, 80);
+  }
+  draw();
+})();
+
 /* ── GSAP Page Load Animation ── */
 if (typeof gsap !== 'undefined') {
   gsap.set('.stat-item', { opacity: 0, y: 20 });
